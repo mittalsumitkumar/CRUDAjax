@@ -1,0 +1,95 @@
+﻿@model CRUDAjax.Models.Employee
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+    <script src="~/Scripts/jquery-1.9.1.js"></script>
+    <script src="~/Scripts/bootstrap.js"></script>
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+    @*<script src="~/Scripts/employee.js"></script>*@
+</head>
+<body>
+    <div class="container">
+        <h2>Login</h2>
+        <br /><br />
+              <form>
+                  <div class="form-group">
+                      <label for="EmployeeName">LoginID</label>
+                      <input type="text" class="form-control" id="LoginID" placeholder="LoginID" />
+                  </div>
+                  <div class="form-group">
+                      <label for="EmployeeName">Password</label>
+                      <input type="password" class="form-control" id="Password" placeholder="Password" />
+                  </div>
+                  <div class="form-group">
+                      <button type="button" class="btn btn-primary" id="btnAdd" onclick="return Login();">Login</button>
+                  </div>
+              </form>
+    </div>
+
+    
+    <script>
+
+
+        function validate() {
+            var isValid = true;
+            if ($('#LoginID').val().trim() == "") {
+                $('#LoginID').css('border-color', 'Red');
+                isValid = false;
+                $('#LoginID').focus();
+            }
+            else {
+                $('#LoginID').css('border-color', 'lightgrey');
+            }
+            if ($('#Password').val().trim() == "") {
+                $('#Password').css('border-color', 'Red');
+                isValid = false;
+                $('#Password').focus();
+            }
+            else {
+                $('#Password').css('border-color', 'lightgrey');
+            }
+
+            return isValid;
+        }
+        //Add Data Function
+        function Login() {
+            var res = validate();
+            if (res == false) {
+                return false;
+            }
+            var logindData = {
+                LoginID: $('#LoginID').val(),
+                Password: $('#Password').val(),
+            };
+            //var jsonData = JSON.stringify(empdata);
+            $.ajax({
+                url: "/Login/LoginUser",
+                data: JSON.stringify(logindData),
+                type: "POST",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    if (result=="Sucess")
+                        window.location.href = "/Employee/Index";
+                    else
+                        alert("Invalid User");
+                },
+                error: function (errormessage) {
+                    alert(errormessage.responseText);
+                }
+            });
+        }
+
+    </script>
+</body>
+
+</html>
